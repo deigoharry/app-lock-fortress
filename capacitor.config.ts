@@ -2,7 +2,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.89ce56f0da924bea8e60b3d928bc6fe3',
+  appId: 'com.lovable.applockfortress',
   appName: 'App Lock Fortress',
   webDir: 'dist',
   server: {
