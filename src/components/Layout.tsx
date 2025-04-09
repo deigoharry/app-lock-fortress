@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Settings, Apps, LockKeyhole, Home } from 'lucide-react';
+import { Shield, Settings, AppWindow, LockKeyhole, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface LayoutProps {
@@ -17,7 +17,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   
   const navItems = [
     { path: '/', icon: Home, label: 'Home' },
-    { path: '/apps', icon: Apps, label: 'Apps' },
+    { path: '/apps', icon: AppWindow, label: 'Apps' },
     { path: '/lock', icon: LockKeyhole, label: 'Lock' },
     { path: '/settings', icon: Settings, label: 'Settings' },
   ];

@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Settings, Shield, Bell, Clock, Lock, AlertTriangle, ChevronRight } from 'lucide-react';
+import { Settings, Shield, Bell, Clock, Lock, AlertTriangle, ChevronRight, Fingerprint } from 'lucide-react';
 import Layout from '@/components/Layout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
