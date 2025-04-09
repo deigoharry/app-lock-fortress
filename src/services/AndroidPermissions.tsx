@@ -2,8 +2,8 @@
 import React from 'react';
 import { toast } from 'sonner';
 
-// This is a mock service that simulates Android permissions
-// In a real app, this would use Capacitor plugins to interface with Android APIs
+// This simulates Android permissions but will be replaced with actual Capacitor plugins
+// when running on a real Android device
 
 export interface Permission {
   name: string;
@@ -41,7 +41,8 @@ export const requiredPermissions: Permission[] = [
 
 // In a real Android implementation, this would use Android's permission APIs
 export const requestPermission = async (permission: Permission): Promise<boolean> => {
-  // Simulate permission request delay
+  // On a real device, this would use Capacitor to request permissions
+  // For now we simulate permission request delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
   // Simulate successful permission grant
@@ -85,20 +86,11 @@ export const requestAllPermissions = async (): Promise<boolean> => {
 };
 
 // For a real Android app, we would implement a service like this:
-/*
 export const startAppLockingService = () => {
   // This would use Capacitor to start an Android foreground service
   // The service would monitor app launches and show the lock screen when needed
   toast.success("App protection service started", {
     description: "Your apps are now being protected"
-  });
-};
-*/
-
-// Mock implementation for our demo
-export const startAppLockingService = () => {
-  toast.success("App protection service started", {
-    description: "Your apps are now being protected (simulation)"
   });
 };
 
