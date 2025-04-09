@@ -5,6 +5,7 @@ import { Shield, Fingerprint, KeyRound, LockKeyhole, ChevronRight } from 'lucide
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import AndroidPermissionExplainer from '@/components/AndroidPermissionExplainer';
 
 const Index = () => {
   return (
@@ -19,6 +20,8 @@ const Index = () => {
             Secure your apps with PIN, password, or fingerprint authentication
           </p>
         </div>
+
+        <AndroidPermissionExplainer />
 
         <Card className="security-card">
           <CardHeader>

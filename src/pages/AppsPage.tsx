@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Lock, Unlock, Search, Shield, AlertTriangle } from 'lucide-react';
+import { Lock, Unlock, Search, Shield, AlertTriangle, AppWindow, Info } from 'lucide-react';
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,36 +8,52 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 // Mock app data
 const mockApps = [
-  { id: 1, name: 'Facebook', icon: '📱', locked: false },
-  { id: 2, name: 'WhatsApp', icon: '💬', locked: true },
-  { id: 3, name: 'Instagram', icon: '📷', locked: false },
-  { id: 4, name: 'Gmail', icon: '✉️', locked: true },
-  { id: 5, name: 'YouTube', icon: '▶️', locked: false },
-  { id: 6, name: 'TikTok', icon: '🎵', locked: false },
-  { id: 7, name: 'Twitter', icon: '🐦', locked: false },
-  { id: 8, name: 'Snapchat', icon: '👻', locked: false },
-  { id: 9, name: 'Netflix', icon: '🎬', locked: false },
-  { id: 10, name: 'Spotify', icon: '🎧', locked: false },
-  { id: 11, name: 'Amazon', icon: '🛒', locked: false },
-  { id: 12, name: 'Banking App', icon: '💰', locked: true },
-  { id: 13, name: 'Photos', icon: '🖼️', locked: false },
-  { id: 14, name: 'Calendar', icon: '📅', locked: false },
-  { id: 15, name: 'Notes', icon: '📝', locked: false },
+  { id: 1, name: 'Facebook', icon: '📱', locked: false, packageName: 'com.facebook.katana' },
+  { id: 2, name: 'WhatsApp', icon: '💬', locked: true, packageName: 'com.whatsapp' },
+  { id: 3, name: 'Instagram', icon: '📷', locked: false, packageName: 'com.instagram.android' },
+  { id: 4, name: 'Gmail', icon: '✉️', locked: true, packageName: 'com.google.android.gm' },
+  { id: 5, name: 'YouTube', icon: '▶️', locked: false, packageName: 'com.google.android.youtube' },
+  { id: 6, name: 'TikTok', icon: '🎵', locked: false, packageName: 'com.zhiliaoapp.musically' },
+  { id: 7, name: 'Twitter', icon: '🐦', locked: false, packageName: 'com.twitter.android' },
+  { id: 8, name: 'Snapchat', icon: '👻', locked: false, packageName: 'com.snapchat.android' },
+  { id: 9, name: 'Netflix', icon: '🎬', locked: false, packageName: 'com.netflix.mediaclient' },
+  { id: 10, name: 'Spotify', icon: '🎧', locked: false, packageName: 'com.spotify.music' },
+  { id: 11, name: 'Amazon', icon: '🛒', locked: false, packageName: 'com.amazon.mShop.android.shopping' },
+  { id: 12, name: 'Banking App', icon: '💰', locked: true, packageName: 'com.example.banking' },
+  { id: 13, name: 'Photos', icon: '🖼️', locked: false, packageName: 'com.google.android.apps.photos' },
+  { id: 14, name: 'Calendar', icon: '📅', locked: false, packageName: 'com.google.android.calendar' },
+  { id: 15, name: 'Notes', icon: '📝', locked: false, packageName: 'com.example.notes' },
 ];
 
 const AppsPage = () => {
   const [apps, setApps] = useState(mockApps);
   const [search, setSearch] = useState('');
   const [showWarning, setShowWarning] = useState(true);
+  const [permissionsGranted, setPermissionsGranted] = useState(false);
+  const [showPermissionInfo, setShowPermissionInfo] = useState(false);
 
   const filteredApps = apps.filter(app => 
     app.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleToggleLock = (id: number) => {
+    if (!permissionsGranted) {
+      setShowPermissionInfo(true);
+      return;
+    }
+
     setApps(apps.map(app => 
       app.id === id ? { ...app, locked: !app.locked } : app
     ));
@@ -51,6 +67,40 @@ const AppsPage = () => {
     }
   };
 
+  const requestPermissions = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        // Simulate permission request
+        setTimeout(() => {
+          setPermissionsGranted(true);
+          resolve(true);
+        }, 2000);
+      }),
+      {
+        loading: 'Requesting permissions...',
+        success: 'Permissions granted!',
+        error: 'Failed to get permissions',
+      }
+    );
+    setShowPermissionInfo(false);
+  };
+
+  const scanForInstalledApps = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        // Simulate scanning for apps
+        setTimeout(() => {
+          resolve(true);
+        }, 2000);
+      }),
+      {
+        loading: 'Scanning for installed apps...',
+        success: 'Found all installed apps',
+        error: 'Failed to scan apps',
+      }
+    );
+  };
+
   const lockedAppsCount = apps.filter(app => app.locked).length;
 
   return (
@@ -61,7 +111,29 @@ const AppsPage = () => {
           <p className="text-gray-600 dark:text-gray-400">Lock apps to keep them secure</p>
         </div>
 
-        {showWarning && (
+        {!permissionsGranted && (
+          <Card className="bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-700">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <Info className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <h3 className="font-medium text-amber-800 dark:text-amber-300">Permissions Required</h3>
+                  <p className="text-sm text-amber-700 dark:text-amber-400 mb-3">
+                    App Lock Fortress needs usage access, accessibility services, and display over other apps permissions to function properly.
+                  </p>
+                  <Button 
+                    onClick={requestPermissions}
+                    className="bg-amber-600 hover:bg-amber-700 text-white"
+                  >
+                    Grant Permissions
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {showWarning && permissionsGranted && (
           <Card className="bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-700">
             <CardContent className="p-4">
               <div className="flex items-start gap-3">
@@ -96,6 +168,16 @@ const AppsPage = () => {
           />
         </div>
 
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            <AppWindow className="h-5 w-5 text-fortress-600" />
+            Installed Apps
+          </h2>
+          <Button variant="outline" onClick={scanForInstalledApps}>
+            Scan for Apps
+          </Button>
+        </div>
+
         <Card className="security-card">
           <CardHeader className="pb-3">
             <CardTitle className="flex justify-between items-center">
@@ -121,7 +203,10 @@ const AppsPage = () => {
                         <div className="w-10 h-10 flex items-center justify-center rounded-md bg-fortress-100 dark:bg-fortress-900">
                           <span className="text-xl">{app.icon}</span>
                         </div>
-                        <span className="font-medium">{app.name}</span>
+                        <div>
+                          <span className="font-medium">{app.name}</span>
+                          <p className="text-xs text-gray-500">{app.packageName}</p>
+                        </div>
                       </div>
                       <div className="flex items-center">
                         {app.locked ? (
@@ -150,6 +235,7 @@ const AppsPage = () => {
           <Button 
             className="w-full max-w-xs"
             variant={lockedAppsCount > 0 ? "outline" : "default"}
+            disabled={!permissionsGranted}
             onClick={() => {
               const allLocked = apps.every(app => app.locked);
               setApps(apps.map(app => ({ ...app, locked: !allLocked })));
@@ -170,6 +256,43 @@ const AppsPage = () => {
             )}
           </Button>
         </div>
+
+        <Dialog open={showPermissionInfo} onOpenChange={setShowPermissionInfo}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>App Permissions Required</DialogTitle>
+              <DialogDescription>
+                To lock other applications, App Lock Fortress needs the following permissions:
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <h3 className="font-medium">Accessibility Service</h3>
+                <p className="text-sm text-muted-foreground">Required to detect when other apps are launched and show the lock screen.</p>
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-medium">Usage Access</h3>
+                <p className="text-sm text-muted-foreground">Allows App Lock Fortress to see which apps you're using.</p>
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-medium">Display Over Other Apps</h3>
+                <p className="text-sm text-muted-foreground">Needed to show the lock screen over other applications.</p>
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-medium">Device Admin (Optional)</h3>
+                <p className="text-sm text-muted-foreground">Provides additional security and prevents app uninstallation.</p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="secondary" onClick={() => setShowPermissionInfo(false)}>
+                Cancel
+              </Button>
+              <Button type="button" onClick={requestPermissions}>
+                Grant Permissions
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );
